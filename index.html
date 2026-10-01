@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kiro's Ghost Runner</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ═══════════════════════════════════════════════
+       MAIN GAME WRAPPER
+  ════════════════════════════════════════════════ -->
+  <div id="game-wrapper">
+
+    <!-- HUD: score display shown during gameplay -->
+    <div id="hud">
+      <div class="hud-item">
+        <span class="hud-label">SCORE</span>
+        <span id="score-display" class="hud-value">0</span>
+      </div>
+      <div class="hud-center-credit">@LucioD3v</div>
+      <div class="hud-item">
+        <span class="hud-label">BEST</span>
+        <span id="highscore-display" class="hud-value">0</span>
+      </div>
+    </div>
+
+    <!-- Canvas: all game rendering happens here -->
+    <canvas id="game-canvas"></canvas>
+
+    <!-- ─── SCREEN: START ─────────────────────────── -->
+    <div id="screen-start" class="overlay active">
+      <div class="screen-content">
+        <!-- Official Kiro ghost PNG -->
+        <div class="ghost-logo">
+          <img src="assets/kiro-ghost.png" width="80" height="80"
+               alt="Kiro mascot" draggable="false" />
+        </div>
+        <h1 class="game-title">KIRO'S<br/><span class="accent">GHOST RUNNER</span></h1>
+        <p class="subtitle">Dodge the bugs. Collect the credits.</p>
+        <div class="key-hint">
+          <kbd>SPACE</kbd> or <kbd>CLICK</kbd> to fly
+        </div>
+        <button class="btn-primary" id="btn-start">START GAME</button>
+        <p class="dev-credit">Developed by <strong>Vicente Guzman</strong> <span class="muted">(@LucioD3v)</span></p>
+        <p class="version-tag">v1.0 · Kiro University Challenge</p>
+      </div>
+    </div>
+
+    <!-- ─── SCREEN: GAME OVER ─────────────────────── -->
+    <div id="screen-gameover" class="overlay">
+      <div class="screen-content">
+        <!-- Kiro ghost — red tint on crash via CSS filter -->
+        <div class="ghost-logo crashed">
+          <img src="assets/kiro-ghost.png" width="70" height="70"
+               alt="Kiro mascot crashed" draggable="false" />
+        </div>
+        <h2 class="gameover-title">PROCESS KILLED</h2>
+        <p class="gameover-reason" id="death-reason">Collision with legacy code</p>
+        <div class="score-summary">
+          <div class="score-row">
+            <span>Score</span>
+            <span id="final-score">0</span>
+          </div>
+          <div class="score-row highlight" id="new-best-row" style="display:none;">
+            <span>🏆 New Best!</span>
+            <span id="final-best">0</span>
+          </div>
+          <div class="score-row" id="best-row">
+            <span>Best</span>
+            <span id="final-best-prev">0</span>
+          </div>
+        </div>
+        <button class="btn-primary" id="btn-restart">RESTART</button>
+        <button class="btn-secondary" id="btn-menu">MAIN MENU</button>
+        <p class="dev-credit">Developed by <strong>Vicente Guzman</strong> <span class="muted">(@LucioD3v)</span></p>
+      </div>
+    </div>
+
+  </div><!-- /game-wrapper -->
+
+  <script src="game.js"></script>
+</body>
+</html>
