@@ -1,0 +1,15 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "Validate JS on Save",
+      "trigger": "PostFileSave",
+      "description": "After saving any JS/HTML/CSS file, runs Node syntax check on game.js to catch errors immediately without needing a browser refresh.",
+      "matcher": "\\.(js|html|css)$",
+      "action": {
+        "type": "command",
+        "command": "node --check game.js 2>&1 && echo \"✅ game.js syntax OK\" || echo \"❌ Syntax error in game.js — fix before committing\""
+      }
+    }
+  ]
+}

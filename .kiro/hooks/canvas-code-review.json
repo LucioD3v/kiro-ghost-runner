@@ -1,0 +1,15 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "Canvas Code Review",
+      "trigger": "PostFileSave",
+      "description": "After saving game.js, an agent reviews the canvas code quality — checks save/restore pairing, render-loop allocations, and style consistency.",
+      "matcher": "game\\.js$",
+      "action": {
+        "type": "agent",
+        "prompt": "A game source file was just saved. Review the change and check: (1) Are all canvas draw calls properly wrapped in ctx.save()/ctx.restore()? (2) Are there any obvious performance issues like creating objects inside the render loop? (3) Does the change maintain the existing code style and naming conventions? Report any issues found."
+      }
+    }
+  ]
+}

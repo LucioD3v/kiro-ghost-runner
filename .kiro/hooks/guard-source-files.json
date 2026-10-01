@@ -1,0 +1,15 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "Guard Core Source Files",
+      "trigger": "PreToolUse",
+      "description": "Before any file write, warns if attempting to write outside the expected source files to prevent accidental overwrites.",
+      "matcher": "fs_write|str_replace",
+      "action": {
+        "type": "command",
+        "command": ""
+      }
+    }
+  ]
+}

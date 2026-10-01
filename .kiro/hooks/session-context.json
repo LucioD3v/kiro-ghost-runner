@@ -1,0 +1,14 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "Session Context Loader",
+      "trigger": "SessionStart",
+      "description": "At session start, reminds the agent of the active challenge deadline and project context so every session is productive.",
+      "action": {
+        "type": "agent",
+        "prompt": "This is the Kiro's Ghost Runner project, built for the Kiro University Challenge (submission deadline: October 5, 2026 at 23:59 PT). The project is a dependency-free HTML5 Canvas runner game in index.html + style.css + game.js. Before making any changes: (1) read the relevant source file first, (2) keep all code in vanilla JS/CSS with no external dependencies, (3) ensure the .kiro folder stays up to date with any new Kiro features used."
+      }
+    }
+  ]
+}
