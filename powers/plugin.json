@@ -1,0 +1,31 @@
+{
+  "name": "ghost-runner-dev",
+  "version": "1.0.0",
+  "description": "Development power for Kiro's Ghost Runner. Provides canvas game development tools, game design context, and automated code review. Activates on canvas, game, physics, collision, obstacle, scoring, or sprite keywords.",
+  "author": {
+    "name": "Vicente Guzman",
+    "handle": "@LucioD3v"
+  },
+  "keywords": [
+    "canvas",
+    "game",
+    "physics",
+    "collision",
+    "obstacle",
+    "scoring",
+    "sprite",
+    "ghost",
+    "runner",
+    "particle",
+    "gravity",
+    "hitbox"
+  ],
+  "skills": [
+    ".kiro/skills/game-developer/SKILL.md"
+  ],
+  "agents": [
+    ".kiro/agents/canvas-reviewer.json",
+    ".kiro/agents/game-designer.md"
+  ],
+  "readme": "README.md"
+}

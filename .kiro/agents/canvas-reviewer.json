@@ -1,0 +1,20 @@
+{
+  "name": "canvas-reviewer",
+  "description": "HTML5 Canvas code quality reviewer for Kiro's Ghost Runner. Use when reviewing game.js changes, checking render loop performance, or validating canvas drawing patterns.",
+  "model": "claude-sonnet-4",
+  "tools": ["read"],
+  "permissions": {
+    "rules": [
+      { "capability": "fs_read",   "match": ["*.js", "*.html", "*.css", "tests/**"], "effect": "allow" },
+      { "capability": "fs_write",  "match": ["**"],                                  "effect": "deny"  },
+      { "capability": "shell",     "match": ["node tests/**"],                        "effect": "allow" },
+      { "capability": "shell",     "match": ["**"],                                   "effect": "deny"  }
+    ]
+  },
+  "resources": [
+    "file://.kiro/steering/architecture.md",
+    "file://.kiro/steering/project-overview.md",
+    "file://.kiro/skills/game-developer/SKILL.md"
+  ],
+  "welcomeMessage": "Canvas Reviewer ready. I'll check your game.js for rendering correctness, performance issues, and code style — read-only, no changes made."
+}

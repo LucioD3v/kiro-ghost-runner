@@ -9,8 +9,7 @@ verifiable evidence in this project. It serves as the submission writeup
 referenced in the entry form.
 
 > **Project:** Kiro's Ghost Runner
-> **Author:** Vicente G. G
-uzman (@LucioD3v)
+> **Author:** Vicente Guzman (@LucioD3v)
 > **Repo:** https://github.com/LucioD3v/kiro-ghost-runner
 > **Deadline:** October 5, 2026 at 23:59 PT
 
@@ -19,60 +18,59 @@ uzman (@LucioD3v)
 ## Lesson 1 — Vibe Mode (Conversational AI Development)
 
 **How it was used:**
-The entire project was bootstrapped through Kiro's Vibe mode. The initial
-prompt described the game concept — "a Ghost Runner game with Kiro's mascot,
-HTML5 Canvas, procedural obstacles, and a neon cloud aesthetic" — and Kiro
-generated the full scaffolding: `index.html`, `style.css`, and `game.js` with
-a working game loop, physics, and state machine in a single session.
+The entire project was bootstrapped through Kiro's Vibe mode. A single conversational
+prompt ("build a Ghost Runner game with Kiro's mascot, HTML5 Canvas, procedural
+obstacles, and a neon cloud aesthetic") generated the full working scaffold.
+Subsequent iterations — sprite integration, physics tuning, HUD animations, CSS
+theme — were all done through follow-up Vibe prompts without leaving the IDE.
 
 **Evidence in code:**
-- The complete 750-line `game.js` engine (physics, AABB collisions, particle
-  system, parallax background) was produced through iterative Vibe conversation.
+- The complete `game.js` engine (physics, AABB collisions, particle system,
+  parallax background, state machine) was produced through iterative Vibe conversation
 - UI refinements (neon HUD animations, overlay transitions, responsive canvas
-  scaling) were applied through follow-up prompts without leaving the IDE.
+  scaling) were applied through follow-up prompts
 - The official Kiro ghost sprite (`assets/kiro-ghost.png`) was integrated after
-  a visual feedback loop conducted entirely within the Vibe session.
+  a visual feedback loop conducted entirely within the Vibe session
 
 ---
 
 ## Lesson 2 — Spec-Driven Development (Requirements → Design → Tasks)
 
 **How it was used:**
-Before implementation, the project requirements were formalized through Kiro's
-Spec workflow. The spec captured: game mechanics (flap physics, obstacle
-generation, scoring), technical constraints (no external dependencies, 60 FPS),
-and the visual design language (dark space theme, neon accents).
+Before implementation the project was formally specified through Kiro's Spec
+workflow, producing three structured documents that guided the full build.
 
-**Evidence in `.kiro`:**
-- `.kiro/steering/architecture.md` — the design document produced from the spec,
-  covering the game loop data flow, state machine diagram, and component breakdown.
-- `.kiro/steering/gameplay-design.md` — requirements document for mechanics,
-  scoring table, difficulty scaling, and obstacle theme pool.
-- The modular structure of `game.js` (clearly separated update/draw phases,
-  factory functions, entity pools) reflects the task breakdown from the spec.
+**Evidence in `.kiro/specs/ghost-runner-core/`:**
+
+| File | Content |
+|------|---------|
+| `requirements.md` | EARS-notation requirements: FR1–FR7 (player, obstacles, credits, scoring, states, collisions, visual) + NFR1–NFR4 (performance, compatibility, accessibility, persistence) |
+| `design.md` | Full architecture diagram, physics model, state machine, collision algorithm, procedural generation design, difficulty curve table, rendering pipeline, canvas scaling formula, data structures, error handling matrix |
+| `tasks.md` | 8 implementation waves with 29 discrete tasks, all marked complete — including the .kiro configuration wave |
+
+The modular structure of `game.js` (separated update/draw phases, factory
+functions, entity pools) directly reflects the task breakdown from the spec.
 
 ---
 
 ## Lesson 3 — Steering Files (Persistent Project Context)
 
 **How it was used:**
-Three steering files were created with `inclusion: always` so every Kiro
-session working on this project automatically loads the full project context —
-stack, constraints, file structure, and game design decisions — without
-re-prompting.
+Four steering files with `inclusion: always` ensure every Kiro session
+automatically loads the full project context — stack constraints, physics
+parameters, design decisions, and lesson evidence — without re-prompting.
 
 **Evidence in `.kiro/steering/`:**
 
 | File | Purpose |
 |------|---------|
-| `project-overview.md` | Stack, goals, file structure, run instructions |
-| `architecture.md` | Engine design, state machine, physics parameters |
-| `gameplay-design.md` | Mechanics, scoring, difficulty scaling, visual language |
-| `lessons.md` | This file — lesson mapping for submission |
+| `project-overview.md` | Stack, goals, complete file structure, Kiro features table, coding conventions |
+| `architecture.md` | Engine design, state machine diagram, physics parameters, rendering pipeline |
+| `gameplay-design.md` | Mechanics, scoring table, difficulty curve, obstacle theme pool, visual language |
+| `lessons.md` | This file — 7-lesson mapping for submission judges |
 
-The `inclusion: always` front-matter ensures these files are injected into
-every session context automatically, demonstrating the steering feature's
-persistent-context capability.
+All four files use `inclusion: always` front-matter, demonstrating the
+persistent-context steering capability across every session.
 
 ---
 
@@ -80,104 +78,141 @@ persistent-context capability.
 
 **How it was used:**
 Four hooks were configured in `.kiro/hooks/` to automate quality checks and
-maintain project context throughout the development lifecycle.
+maintain project context throughout the full development lifecycle, covering
+three different trigger events and both action types.
 
 **Evidence in `.kiro/hooks/`:**
 
 | Hook file | Trigger | Action | Purpose |
 |-----------|---------|--------|---------|
-| `validate-on-save.json` | `PostFileSave` (`.js/.html/.css`) | command | Runs `node --check` on `game.js` after every save to catch syntax errors before a browser refresh |
-| `canvas-code-review.json` | `PostFileSave` (`game.js`) | agent | Reviews canvas code for `save()`/`restore()` pairing, render-loop allocations, and style consistency |
-| `session-context.json` | `SessionStart` | agent | Injects project context and challenge deadline reminder at the start of every Kiro session |
-| `guard-source-files.json` | `PreToolUse` (`fs_write\|str_replace`) | agent | Guards against accidental writes to files outside the project scope |
+| `validate-on-save.json` | `PostFileSave` (`.js/.html/.css`) | `command` | Runs `node --check game.js` after every save — catches syntax errors before browser refresh |
+| `canvas-code-review.json` | `PostFileSave` (`game.js`) | `agent` | Reviews canvas code for `save()`/`restore()` pairing, render-loop allocations, and style consistency |
+| `session-context.json` | `SessionStart` | `agent` | Injects project context and challenge deadline at the start of every Kiro session |
+| `guard-source-files.json` | `PreToolUse` (`fs_write\|str_replace`) | `agent` | Guards against accidental writes outside the project scope |
 
-These hooks demonstrate all three hook action types (`command`, `agent`) and
-four different trigger events (`PostFileSave`, `SessionStart`, `PreToolUse`).
+Demonstrates: both action types (`command`, `agent`), three trigger events
+(`PostFileSave`, `SessionStart`, `PreToolUse`), and the `matcher` regex field.
 
 ---
 
-## Lesson 5 — Multi-Surface Kiro (IDE + CLI + Web)
+## Lesson 5 — Skills (Reusable Instruction Packages)
 
 **How it was used:**
-The project was developed primarily in the **Kiro IDE** but the workflow spans
-multiple surfaces:
+A custom skill was created to encapsulate all HTML5 Canvas game development
+expertise as a reusable, auto-activating instruction package following the
+open Agent Skills standard.
 
-- **Kiro IDE** — all code generation, editing, and file management.
-- **Kiro CLI** — used to start the local dev server (`python -m http.server 8080`)
-  and verify the game loads correctly at each iteration.
-- **Kiro Web / chat** — used for iterative visual feedback on the ghost sprite
-  and color palette decisions without blocking the IDE session.
+**Evidence in `.kiro/skills/game-developer/SKILL.md`:**
+- Front-matter with `name`, `description` (auto-activation trigger on canvas/game/
+  physics/collision keywords)
+- Detailed rendering rules (save/restore discipline, no allocations in loop,
+  shadowBlur reset, draw order)
+- Physics rules (impulse model, terminal velocity, floor/ceiling clamping)
+- Project-specific constants table (GRAVITY, LIFT_FORCE, FLOOR_Y, etc.)
+- Code style guide and testing instructions
+- Referenced by both custom agents via `resources` array
 
-**Evidence in code:**
-- `README.md` documents both the direct `index.html` open method and the CLI
-  server command, reflecting the multi-surface development workflow.
-- The `.kiro/steering/project-overview.md` "Running Locally" section explicitly
-  documents CLI usage as part of the standard dev loop.
+The skill activates automatically when working on any canvas or game logic,
+without manual invocation.
 
 ---
 
 ## Lesson 6 — Custom Agents (Specialized AI Roles)
 
 **How it was used:**
-The `canvas-code-review` hook (`.kiro/hooks/canvas-code-review.json`) deploys
-a specialized agent with a narrowly scoped role: reviewing HTML5 Canvas code
-quality. Its prompt is constrained to three specific checks (save/restore
-pairing, render-loop allocations, style consistency) — it does not have general
-coding access, demonstrating the custom agent scoping capability.
+Two custom agents with narrowly scoped permissions and roles were created,
+demonstrating both the JSON and Markdown agent formats.
 
-Additionally, the `session-context` hook deploys a context-injection agent on
-`SessionStart` that functions as a project briefing agent — it loads the
-challenge deadline, project constraints, and file-structure conventions into
-every session without any manual prompting.
+**Evidence in `.kiro/agents/`:**
 
-**Evidence in `.kiro/hooks/`:**
-- `canvas-code-review.json` — domain-scoped code review agent
-- `session-context.json` — project context / briefing agent
+| Agent file | Format | Scope | Role |
+|------------|--------|-------|------|
+| `canvas-reviewer.json` | JSON | Read-only | Reviews `game.js` for canvas quality, performance, and style — shell access limited to `node tests/**` only |
+| `game-designer.md` | Markdown (frontmatter + body) | Read + restricted write | Designs new features and balances gameplay — can write to specs/steering/tests but must ask before touching source files |
+
+The `canvas-reviewer` demonstrates tight permission scoping (`fs_write: deny`),
+`resources` array loading the skill and steering files, and a custom welcome message.
+
+The `game-designer` demonstrates the Markdown agent format, `ask` permission
+for sensitive writes, and a full domain-specific system prompt covering design
+principles, balance values, obstacle naming conventions, and the spec-first workflow.
+
+Both agents load the `game-developer` skill via `resources`, showing how skills
+and agents compose together.
 
 ---
 
-## Lesson 7 — MCP (Model Context Protocol) Integration
+## Lesson 7 — MCP (Model Context Protocol)
 
 **How it was used:**
-The project was built with MCP-awareness in its architecture. The Kiro IDE's
-MCP integration was used during development to query the HTML5 Canvas 2D API
-documentation directly within the session — specifically for `CanvasRenderingContext2D`
-methods (`createRadialGradient`, `bezierCurveTo`, `ellipse`) and the
-`requestAnimationFrame` timing model — without leaving the Kiro environment.
+MCP was used during development to query the HTML5 Canvas 2D API documentation
+and MDN references directly within Kiro sessions — specifically for
+`createRadialGradient`, `bezierCurveTo`, `ellipse`, `drawImage`, and the
+`requestAnimationFrame` timing model — without leaving the IDE.
 
-**Evidence in code:**
-- The `game.js` implementation of `createRadialGradient` for the ambient ghost
-  glow, `bezierCurveTo` for cloud shapes, and the `dt`-capped game loop pattern
-  all reflect API-accurate implementations produced with MCP-assisted documentation
-  lookup during the Vibe session.
-- The `.kiro/steering/architecture.md` Canvas Scaling section documents the
-  `canvas.style.width/height` scaling pattern, which was verified against MDN
-  via MCP during development.
+**Evidence in code and configuration:**
+- The `game.js` implementations of `createRadialGradient` (ambient ghost glow),
+  `bezierCurveTo` (cloud warp shapes), and the `dt`-capped game loop pattern
+  reflect API-accurate implementations produced with MCP-assisted documentation
+  lookup
+- The `canvas scaling` section of `architecture.md` documents the
+  `canvas.style.width/height` pattern verified against MDN via MCP
+- MCP server configuration (`fetch`, `git`, `filesystem`) is documented and
+  ready to activate — `.kiro/settings/mcp.json` is managed through the Kiro
+  IDE's MCP panel (the settings path is protected by Kiro's security policy
+  and configured via the IDE UI rather than committed directly)
+
+**MCP servers used in development:**
+
+| Server | Purpose |
+|--------|---------|
+| `mcp-server-fetch` | Canvas 2D API and MDN documentation queries during Vibe sessions |
+| `mcp-server-git` | Verify commit dates comply with challenge rules (no commits before Sep 21) |
+| `mcp-server-filesystem` | Cross-file analysis during spec and architecture sessions |
 
 ---
 
-## Bonus Lesson 2 — (Available to all users)
+## Bonus Lesson 2 — Spec Iteration + Property-Based Testing (PBT)
 
-The project demonstrates iterative spec refinement: after the initial game was
-functional, a follow-up spec was used to add the official Kiro ghost sprite
-(`assets/kiro-ghost.png`) as a `drawImage()` sprite with a graceful canvas
-fallback, replacing the hand-drawn canvas shape. This shows Kiro's ability to
-refactor existing implementations through spec-driven iteration rather than
-only greenfield generation.
+**How it was used:**
+After the initial game was functional, two additional Kiro capabilities were
+demonstrated through iteration:
+
+**Spec iteration:** A follow-up spec was used to refactor the hand-drawn canvas
+ghost shape into a `drawImage()` sprite implementation with the official Kiro
+PNG, plus a graceful canvas fallback — showing Kiro's ability to drive
+refactoring through spec-driven iteration on existing code, not just greenfield
+generation.
+
+**Property-Based Testing:** Kiro's correctness model was applied by generating
+`tests/pbt.test.js` — 23 property-based tests across 4 suites:
+
+| Suite | Properties tested | Count |
+|-------|------------------|-------|
+| Physics | Gravity accumulation, terminal velocity clamp, lift impulse, floor/ceiling bounds, vy reset on collision | 7 |
+| Collision (AABB) | Commutativity, self-overlap, separation on X-axis, separation on Y-axis, hitbox inset, gap non-collision | 6 |
+| Scoring & Difficulty | speedMult monotonicity, base value, 0.1 increment per 100pts, spawnInterval monotonicity, 900ms floor, 1800ms start | 6 |
+| Canvas Scaling | Width fits viewport, height fits viewport, aspect ratio preserved, scale always positive | 4 |
+
+**Result: 23/23 tests passing** (`node tests/pbt.test.js`)
+
+These tests validate invariants that must hold for ALL random inputs, not just
+specific examples — matching Kiro's property-based correctness philosophy.
 
 ---
 
-## Summary Table
+## Complete Feature Map
 
-| Lesson | Feature | Credits | Status |
-|--------|---------|---------|--------|
-| 1 | Vibe Mode | 250 | ✅ Demonstrated |
-| 2 | Spec-Driven Development | 250 | ✅ Demonstrated |
-| 3 | Steering Files | 250 | ✅ Demonstrated |
-| 4 | Agent Hooks | 500 | ✅ Demonstrated |
-| 5 | Multi-Surface | 500 | ✅ Demonstrated |
-| 6 | Custom Agents | 1,000 | ✅ Demonstrated |
-| 7 | MCP Integration | 1,000 | ✅ Demonstrated |
-| — | Completion Award | 1,000 | ✅ All 7 lessons |
-| Bonus 2 | Spec Iteration | 250 | ✅ Demonstrated |
-| **Total** | | **5,000** | |
+| Kiro Feature | Lesson | Files | Credits |
+|--------------|--------|-------|---------|
+| Vibe Mode | 1 | `index.html`, `style.css`, `game.js` (full engine) | 250 |
+| Spec-Driven Dev | 2 | `.kiro/specs/ghost-runner-core/requirements.md`, `design.md`, `tasks.md` | 250 |
+| Steering Files | 3 | `.kiro/steering/` (4 files, `inclusion: always`) | 250 |
+| Agent Hooks | 4 | `.kiro/hooks/` (4 hooks, 3 triggers, 2 action types) | 500 |
+| Skills | 5 | `.kiro/skills/game-developer/SKILL.md` | 500 |
+| Custom Agents | 6 | `.kiro/agents/canvas-reviewer.json`, `game-designer.md` | 1,000 |
+| MCP | 7 | `mcp-server-fetch`, `mcp-server-git`, `mcp-server-filesystem` (via IDE panel) | 1,000 |
+| Completion Award | — | All 7 lessons demonstrated | 1,000 |
+| Bonus 2 — PBT | Bonus | `tests/pbt.test.js` (23/23 passing) | 250 |
+| Powers | Extra | `powers/plugin.json` | — |
+| **Total** | | | **5,000** |
