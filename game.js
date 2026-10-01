@@ -26,9 +26,9 @@ ghostImg.onerror = () => {
 };
 
 // ─── Audio System ────────────────────────────────────────────────────
-// Uses HTMLAudioElement — works with file://, http://, and GitHub Pages
-// without any CORS or autoplay restrictions beyond the first user gesture.
-// All audio is optional: missing files are silently ignored.
+// Uses HTMLAudioElement pool — works on file://, http://, and GitHub Pages.
+// Strategy: pre-create multiple Audio instances per sound (pool of 4) so
+// the same sound can overlap without cloneNode() issues.
 
 const SOUND_SRCS = {
   jump:     'assets/jump.mp3',
@@ -36,49 +36,63 @@ const SOUND_SRCS = {
   gamelost: 'assets/gamelost.mp3',
 };
 
-// Pre-create one Audio element per sound for instant playback
-const audioElements = {};
-let   audioUnlocked = false;   // true after first user gesture
+const POOL_SIZE  = 4;    // max simultaneous plays of the same sound
+const audioPool  = {};   // name → Audio[]
+let   audioReady = false;
 
-(function preloadAudio() {
+// Build the pool immediately — browsers start buffering right away
+(function buildAudioPool() {
   Object.entries(SOUND_SRCS).forEach(([name, src]) => {
-    try {
-      const el = new Audio(src);
-      el.preload = 'auto';
-      audioElements[name] = el;
-    } catch (e) { /* browser blocks Audio — degrade silently */ }
+    audioPool[name] = [];
+    for (let i = 0; i < POOL_SIZE; i++) {
+      try {
+        const el = new Audio();
+        el.src     = src;
+        el.preload = 'auto';
+        el.volume  = 1;
+        audioPool[name].push(el);
+      } catch (e) { /* Audio not supported */ }
+    }
   });
 })();
 
 /**
- * Must be called once from a user-gesture handler (click / keydown).
- * Silently "unlocks" audio on mobile Safari and other strict browsers
- * by attempting a zero-volume play on every element.
+ * Call on first user gesture. Attempts a silent play on every pooled element
+ * to satisfy autoplay policies on Safari / mobile browsers.
  */
 function initAudio() {
-  if (audioUnlocked) return;
-  audioUnlocked = true;
-  Object.values(audioElements).forEach(el => {
-    el.volume = 0;
-    el.play().catch(() => {});   // unlock — ignore any error
-    el.pause();
-    el.currentTime = 0;
-    el.volume = 1;
+  if (audioReady) return;
+  audioReady = true;
+  Object.values(audioPool).forEach(pool => {
+    pool.forEach(el => {
+      el.muted = true;
+      const p = el.play();
+      if (p) p.then(() => { el.pause(); el.currentTime = 0; el.muted = false; })
+               .catch(() => { el.muted = false; });
+    });
   });
 }
 
 /**
- * Play a sound by name at the given volume (0–1).
- * Clones the element so the same sound can overlap itself.
+ * Play a pooled sound. Picks the first element whose playback has ended
+ * (or hasn't started), resets it, and plays.
  */
 function playSound(name, volume = 1.0) {
-  const el = audioElements[name];
-  if (!el) return;
+  const pool = audioPool[name];
+  if (!pool || pool.length === 0) return;
+
+  // Find an idle element (paused or ended)
+  let el = pool.find(e => e.paused || e.ended);
+
+  // If all are playing, forcibly reuse the one furthest along
+  if (!el) {
+    el = pool.reduce((a, b) => a.currentTime > b.currentTime ? a : b);
+  }
+
   try {
-    // cloneNode lets the same sound fire multiple times simultaneously
-    const clone = el.cloneNode();
-    clone.volume = Math.max(0, Math.min(1, volume));
-    clone.play().catch(() => {});   // autoplay policy — ignore if blocked
+    el.currentTime = 0;
+    el.volume      = Math.max(0, Math.min(1, volume));
+    el.play().catch(() => {}); // silently ignore autoplay blocks
   } catch (e) { /* degrade silently */ }
 }
 
