@@ -25,6 +25,63 @@ ghostImg.onerror = () => {
   console.warn('kiro-ghost.png not found, using canvas fallback.');
 };
 
+// ─── Audio System ────────────────────────────────────────────────────
+// Uses HTMLAudioElement — works with file://, http://, and GitHub Pages
+// without any CORS or autoplay restrictions beyond the first user gesture.
+// All audio is optional: missing files are silently ignored.
+
+const SOUND_SRCS = {
+  jump:     'assets/jump.mp3',
+  coin:     'assets/coin.mp3',
+  gamelost: 'assets/gamelost.mp3',
+};
+
+// Pre-create one Audio element per sound for instant playback
+const audioElements = {};
+let   audioUnlocked = false;   // true after first user gesture
+
+(function preloadAudio() {
+  Object.entries(SOUND_SRCS).forEach(([name, src]) => {
+    try {
+      const el = new Audio(src);
+      el.preload = 'auto';
+      audioElements[name] = el;
+    } catch (e) { /* browser blocks Audio — degrade silently */ }
+  });
+})();
+
+/**
+ * Must be called once from a user-gesture handler (click / keydown).
+ * Silently "unlocks" audio on mobile Safari and other strict browsers
+ * by attempting a zero-volume play on every element.
+ */
+function initAudio() {
+  if (audioUnlocked) return;
+  audioUnlocked = true;
+  Object.values(audioElements).forEach(el => {
+    el.volume = 0;
+    el.play().catch(() => {});   // unlock — ignore any error
+    el.pause();
+    el.currentTime = 0;
+    el.volume = 1;
+  });
+}
+
+/**
+ * Play a sound by name at the given volume (0–1).
+ * Clones the element so the same sound can overlap itself.
+ */
+function playSound(name, volume = 1.0) {
+  const el = audioElements[name];
+  if (!el) return;
+  try {
+    // cloneNode lets the same sound fire multiple times simultaneously
+    const clone = el.cloneNode();
+    clone.volume = Math.max(0, Math.min(1, volume));
+    clone.play().catch(() => {});   // autoplay policy — ignore if blocked
+  } catch (e) { /* degrade silently */ }
+}
+
 // ─── Game Constants ──────────────────────────────────────────────────
 const GAME_W          = 800;   // Logical game width  (px)
 const GAME_H          = 400;   // Logical game height (px)
@@ -80,6 +137,7 @@ const ghost = {
   /** Apply upward lift (flap) */
   flap() {
     this.vy = LIFT_FORCE;
+    playSound('jump', 0.7);
   },
 
   update() {
@@ -320,6 +378,7 @@ function updateCredits(dt) {
         c.collected = true;
         addScore(10);
         spawnCollectParticles(c.x, c.y, '#ffe066');
+        playSound('coin', 0.8);
       }
     }
 
@@ -612,6 +671,7 @@ function triggerGameOver(collidedWith) {
   ghost.alive = false;
 
   spawnDeathParticles(ghost.x + ghost.w / 2, ghost.y + ghost.h / 2);
+  playSound('gamelost', 0.9);
 
   const isNewBest = saveHighScore();
 
@@ -723,6 +783,7 @@ function resizeCanvas() {
 
 // ─── Input Handling ──────────────────────────────────────────────────
 function handleFlapInput() {
+  initAudio();   // initialise AudioContext on first user gesture (browser autoplay policy)
   if (state === 'playing') {
     ghost.flap();
   }
@@ -743,8 +804,8 @@ canvas.addEventListener('pointerdown', (e) => {
 });
 
 // UI Buttons
-document.getElementById('btn-start').addEventListener('click', startGame);
-document.getElementById('btn-restart').addEventListener('click', startGame);
+document.getElementById('btn-start').addEventListener('click', () => { initAudio(); startGame(); });
+document.getElementById('btn-restart').addEventListener('click', () => { initAudio(); startGame(); });
 document.getElementById('btn-menu').addEventListener('click', () => {
   state = 'start';
   showScreen('screen-start');
