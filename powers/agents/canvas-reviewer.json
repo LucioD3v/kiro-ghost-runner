@@ -1,0 +1,18 @@
+{
+  "name": "canvas-reviewer",
+  "description": "HTML5 Canvas code quality reviewer. Use when reviewing game loop code, checking render performance, or validating canvas drawing patterns in any browser-based game project.",
+  "model": "claude-sonnet-4",
+  "tools": ["read"],
+  "permissions": {
+    "rules": [
+      { "capability": "fs_read",  "match": ["**/*.js", "**/*.html", "**/*.css", "tests/**"], "effect": "allow" },
+      { "capability": "fs_write", "match": ["**"],                                            "effect": "deny"  },
+      { "capability": "shell",    "match": ["node tests/**"],                                 "effect": "allow" },
+      { "capability": "shell",    "match": ["**"],                                            "effect": "deny"  }
+    ]
+  },
+  "resources": [
+    "skill://skills/game-developer/SKILL.md"
+  ],
+  "welcomeMessage": "Canvas Reviewer ready — read-only mode. I'll audit your canvas code for ctx.save()/restore() pairing, render-loop allocations, shadowBlur resets, draw order, and performance issues. No files will be modified."
+}

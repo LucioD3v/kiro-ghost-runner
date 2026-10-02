@@ -1,14 +1,17 @@
 {
   "name": "ghost-runner-dev",
   "version": "1.0.0",
-  "description": "Development power for Kiro's Ghost Runner. Provides canvas game development tools, game design context, and automated code review. Activates on canvas, game, physics, collision, obstacle, scoring, or sprite keywords.",
+  "description": "A Kiro Power for HTML5 Canvas browser game development. Bundles a game-developer skill, two specialized agents (canvas reviewer + game designer), and MCP servers for documentation lookup and git analysis. Built for Kiro's Ghost Runner — Kiro University Challenge 2026.",
   "author": {
     "name": "Vicente Guzman",
-    "handle": "@LucioD3v"
+    "handle": "@LucioD3v",
+    "url": "https://github.com/LucioD3v"
   },
+  "repository": "https://github.com/LucioD3v/kiro-ghost-runner",
   "keywords": [
     "canvas",
     "game",
+    "html5",
     "physics",
     "collision",
     "obstacle",
@@ -18,14 +21,17 @@
     "runner",
     "particle",
     "gravity",
-    "hitbox"
+    "hitbox",
+    "game-loop",
+    "audio"
   ],
   "skills": [
-    ".kiro/skills/game-developer/SKILL.md"
+    "skills/game-developer/SKILL.md"
   ],
   "agents": [
-    ".kiro/agents/canvas-reviewer.json",
-    ".kiro/agents/game-designer.md"
+    "agents/canvas-reviewer.json",
+    "agents/game-designer.md"
   ],
+  "mcp": "mcp.json",
   "readme": "README.md"
 }
